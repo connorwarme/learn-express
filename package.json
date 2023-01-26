@@ -1,0 +1,23 @@
+{
+  "name": "learn-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/connorwarme/learn-express.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/connorwarme/learn-express/issues"
+  },
+  "homepage": "https://github.com/connorwarme/learn-express#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
