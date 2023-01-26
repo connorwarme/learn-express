@@ -19,5 +19,8 @@
   "homepage": "https://github.com/connorwarme/learn-express#readme",
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.32.0"
   }
 }
