@@ -1,13 +1,27 @@
+require('dotenv').config();
+console.log(process.env)
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require('mongoose');
+
+mongoose.set('strictQuery', false)
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const { mainModule } = require('process');
 
 var app = express();
+const mongodb = process.env.USER_URL;
+console.log(mongodb);
+
+const main = async () => { 
+  await mongoose.connect(mongodb);
+}
+main().catch(err => console.log(err));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,5 +51,19 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// mongoose
+const Schema = mongoose.Schema;
+const BookSchema = new Schema({
+  title: String,
+  published: Date,
+})
+const BookModel = mongoose.model('BookModel', BookSchema)
+const book_instance = new BookModel({ title: 'You are losting me', published: new Date()})
+
+book_instance.save((err) => {
+  if (err) return console.log(err);
+  console.log('saved!');
+})
 
 module.exports = app;
