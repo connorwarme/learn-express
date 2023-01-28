@@ -17,7 +17,7 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', false); // Prepare for Mongoose 7
 
 // const mongoDB = userArgs[0];
-const mongoDB = process.env.address;
+const mongoDB = process.env.USER_URL;
 
 main().catch(err => console.log(err));
 async function main() {
