@@ -45,4 +45,21 @@ router.get("/author/:id", author_controller.author_detail);
 // GET req for all authors
 router.get("/authors", author_controller.author_list);
 
+// genre routes
+// GET req for creating genre
+router.get("/genre/create", genre_controller.genre_create_get);
+// POST req for creating genre
+router.post("/genre/create", genre_controller.genre_create_post);
+// GET req for deleting genre
+router.get("/genre/:id/delete", genre_controller.genre_delete_get);
+// POST req for deleting genre
+router.post("genre/:id/delete", genre_controller.genre_delete_post);
+// GET req for updating genre
+router.get("/genre/:id/update", genre_controller.genre_update_get);
+// POST req for updating genre
+router.post("/genre/:id/update", genre_controller.genre_update_post);
+// GET req for one genre
+router.get("/genre/:id", genre_controller.genre_detail);
+// GET req for genre list
+router.get("/genres", genre_controller.genre_list);
 
