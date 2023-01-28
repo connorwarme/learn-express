@@ -27,4 +27,22 @@ router.get('/book/:id', book_controller.book_detail);
 // GET req for list of all book items
 router.get('/books', book_controller.book_list);
 
+// author routes
+// GET req for creating author
+router.get("/author/create", author_controller.author_create_get);
+// POST req for creating author
+router.post("/author/create", author_controller.author_create_post);
+// GET req to delete author
+router.get("/author/:id/delete", author_controller.author_delete_get);
+// POST req to delete author
+router.post("/author/:id/delete", author_controller.author_delete_post);
+// GET req to update author
+router.get("/author/:id/update", author_controller.author_update_get);
+// POST req to update author
+router.post("/author/:id/update", author_controller.author_update_post);
+// GET req for one author
+router.get("/author/:id", author_controller.author_detail);
+// GET req for all authors
+router.get("/authors", author_controller.author_list);
+
 
