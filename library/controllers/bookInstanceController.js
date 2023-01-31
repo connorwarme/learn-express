@@ -1,4 +1,6 @@
 const BookInstance = require('../models/bookinstance');
+const Book = require('../models/book');
+const async = require('async');
 
 // display list of all book instances
 exports.bookinstance_list = (req, res, next) => {
@@ -16,8 +18,37 @@ exports.bookinstance_list = (req, res, next) => {
 }
 
 // display detail page for a specific BookInstance.
-exports.bookinstance_detail = (req, res) => {
-  res.send(`NOT IMPLEMENTED: BookInstance detail: ${req.params.id}`);
+exports.bookinstance_detail = (req, res, next) => {
+  const batch = [];
+  async.waterfall(
+    [
+      function bookI(callback) {
+        BookInstance.findById(req.params.id)
+          .populate("book")
+          .exec(callback);
+      },
+      function author(results, callback) {
+        batch.push(results);
+        Book.findById(results.book._id)
+          .populate("author") 
+          .exec(callback)
+      }
+    ],
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      if (batch[0] == null) {
+        const err = new Error("Book copy not found!");
+        err.status = 404;
+        return next(err);
+      }
+      if (results.author == null) {
+        console.log('Problem fetching author')
+      }
+      console.log([results.author.url, batch[0]])
+      res.render("bookinstance_detail", { title: `Copy: ${results.title}`, bookinstance: batch[0], author: results.author })
+    })
 }
 
 // display BookInstance create form on GET.
