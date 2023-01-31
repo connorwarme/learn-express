@@ -1,6 +1,7 @@
 const Genre = require("../models/genre");
 const Book = require("../models/book");
 const async = require("async");
+const { body, validationResult } = require("express-validator");
 
 // display list of all genre
 exports.genre_list = (req, res, next) => {
@@ -41,14 +42,46 @@ exports.genre_detail = (req, res, next) => {
 
 // display genre create form on GET
 exports.genre_create_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: Genre create GET");
+  res.render("genre_form", { title: "Create Genre" });
 }
 
 // handle genre create on POST
-exports.genre_create_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: Genre create POST");
-}
-
+exports.genre_create_post = [
+  // validate that the name field is not empty & sanitize
+  body("name", "Genre name required").trim().isLength({ min: 1 }).escape(),
+  // process request after being validated and sanitized
+  (req, res, next) => {
+    // extract the validation errors from the req (if any)
+    const errors = validationResult(req);
+    // create a genre object with the escaped and trimmed data
+    const genre = new Genre({ name: req.body.name });
+    if (!errors.isEmpty()) {
+      // ie there are errors; back to form, w/ sanitized values and error messages
+      res.render("genre_form", { title: "Create Genre", genre, errors: errors.array(),
+      });
+      return;
+    } else {
+      // check if genre already exists in db
+      Genre.findOne({ name: req.body.name }).exec((err, found_genre) => {
+        if (err) {
+          return next(err);
+        }
+        if (found_genre) {
+          // genre exists, redirect to its detail page
+          res.redirect(found_genre.url);
+        } else {
+          genre.save((err) => {
+            if (err) {
+              return next(err);
+            }
+            // new genre saved to db, redirect to detail page
+            res.redirect(genre.url);
+          })
+        }
+      })
+    }
+  }
+]
 // display genre delete form on GET
 exports.genre_delete_get = (req, res) => {
   res.send("NOT IMPLEMENTED: Genre delete GET");
