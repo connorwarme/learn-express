@@ -22,31 +22,28 @@ exports.author_detail = (req, res, next) => {
   async.parallel(
     {
       author(callback) {
-        Author.findById(req.params.id)
-          .exec(callback)
+        Author.findById(req.params.id).exec(callback);
       },
       books(callback) {
-        Book.find( { author: req.params.id }, "title summary")
-          .sort("book.title", "ascending")
-          .exec(callback);
+        Book.find({ author: req.params.id }, "title summary").exec(callback);
       }
+    }, 
+    (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      if (result.author == null) {
+        const err = new Error("Author not found!");
+        err.status = 404;
+        return next(err);
+      }
+      res.render("author_detail", { 
+        title: "Author Detail:", 
+        author: result.author, 
+        books: result.books 
+      })
     }
-  ), 
-  (err, result) => {
-    if (err) {
-      return next(err);
-    }
-    if (result.author == null) {
-      const err = new Error("Author not found!");
-      err.status = 404;
-      return next(err);
-    }
-    res.render("author_detail", { 
-      title: "Author Detail:", 
-      author: result.author, 
-      books: result.books 
-    })
-  }
+  )
 }
 
 // display author create form on GET
