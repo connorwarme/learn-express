@@ -72,6 +72,10 @@ exports.author_create_post = [
     .optional({ checkFalsy: true })
     .isISO8601()
     .toDate(),
+  body("date_of_death", "Invalid date of death")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
     // process the request after validation & sanitization
   (req, res, next) => {
     // extract the errors
