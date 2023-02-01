@@ -137,7 +137,7 @@ exports.book_create_post = [
     const book = new Book({
       title: req.body.title,
       author: req.body.author,
-      summar: req.body.summary,
+      summary: req.body.summary,
       isbn: req.body.isbn,
       genre: req.body.genre,
     })
