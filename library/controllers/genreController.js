@@ -112,7 +112,7 @@ exports.genre_delete_get = (req, res, next) => {
           return next(err);
         }
         res.redirect("/catalog/genres");
-      }
+      });
     }
   )
 }
