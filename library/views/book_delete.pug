@@ -2,7 +2,16 @@ extends layout
 
 block content 
   h1 #{title}: #{book.title} 
-  p #{book.summary} 
+  p #[strong Author:] 
+    a(href=book.author.url) #{book.author.name} 
+  p #[strong Summary:] #{book.summary} 
+  p #[strong ISBN:] #{book.isbn} 
+  p #[strong Genre:] 
+    each genre in book.genre 
+      a(href=genre.url) #{genre.name}
+      |, 
+  
+  hr
 
   if instances.length 
 
@@ -12,11 +21,18 @@ block content
 
       h4 Book Copies 
 
-      dl
+      
       each instance in instances 
-        dt 
+        hr 
+        if instance.status=='Available' 
+          p.text-success #{instance.status} 
+        else if instance.status=='Maintenance' 
+          p.text-danger #{instance.status} 
+        else
+          p.text-warning #{instance.status}
+        p #[strong Imprint:] #{instance.imprint}
+        p #[strong Id:] 
           a(href=instance.url) #{instance._id} 
-        dd #{instance.imprint} 
 
   else 
     p Do you really want to delete #[strong #{book.title}] from the database?
