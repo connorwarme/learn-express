@@ -7,12 +7,16 @@ block content
 
     h3 Books 
     
-
-      dl 
-        each book in genre_books 
-          dt 
-            a(href=book.url) #{book.title} 
-          dd #{book.summary} 
+    dl 
+      each book in genre_books 
+        dt 
+          a(href=book.url) #{book.title} 
+        dd #{book.summary} 
         
-        else 
-          p There are no books in this genre.
+      else 
+        p There are no books in this genre.
+        p #{genre.url}
+  
+  hr 
+  p 
+    a(href=genre.url+'/delete') Delete genre
