@@ -83,8 +83,38 @@ exports.genre_create_post = [
   }
 ]
 // display genre delete form on GET
-exports.genre_delete_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: Genre delete GET");
+exports.genre_delete_get = (req, res, next) => {
+  async.parallel(
+    {
+      genre(callback) {
+        Genre.findById(req.params.id).exec(callback);
+      },
+      books(callback) {
+        Book.find({ genre: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.books.length > 0) {
+        // there are still books w/ that genre, they need to be deleted first
+        res.render("genre_delete", {
+          title: "Delete Genre",
+          books: results.books,
+          genre: results.genre,
+        });
+        return;
+      }
+      // genre has no books: delete object and redirect to genre list
+      Genre.findByIdAndRemove(req.body.genreid, (err) => {
+        if (err) {
+          return next(err);
+        }
+        res.redirect("/catalog/genres");
+      }
+    }
+  )
 }
 
 // handle genre delete on POST
