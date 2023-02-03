@@ -119,12 +119,14 @@ exports.bookinstance_create_post = [
 
 // display BookInstance delete form on GET.
 exports.bookinstance_delete_get = (req, res, next) => {
-  BookInstance.findById(req.params.id).exec((err, instance) => {
-    if (err) {
-      return next(err);
-    }
-    res.render("bookinstance_delete", { title: "Delete Book Copy", instance })
-  })
+  BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec((err, instance) => {
+      if (err) {
+        return next(err);
+      }
+      res.render("bookinstance_delete", { title: "Delete Book Copy", instance })
+    })
 }
 
 // handle BookInstance delete on POST.
