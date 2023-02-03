@@ -213,7 +213,25 @@ exports.author_update_post = [
       date_of_death: req.body.date_of_death,
       _id: req.params.id,
     })
-    // still going here!!
-  
+    if (!errors.isEmpty()) {
+      Author.findById(req.params.id, (err, results) => {
+        if (err) {
+          return next(err);
+        }
+        res.render("book_form", {
+          title: "Update Author",
+          author,
+          errors: errors.array(),
+        });
+      })
+      return;
+    }
+  Author.findByIdAndUpdate(req.params.id, author, {},
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect(results.url);
+    })
   }
 ]
