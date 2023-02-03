@@ -29,5 +29,11 @@ AuthorSchema.virtual("dob").get(function() {
 AuthorSchema.virtual("dod").get(function() {
   return this.date_of_death ? DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED) : '';
 })
+AuthorSchema.virtual("dob_ymd").get(function() {
+  return this.date_of_birth ? DateTime.fromJSDate(this.date_of_birth).toISODate() : '';
+})
+AuthorSchema.virtual("dod_ymd").get(function() {
+  return this.date_of_death ? DateTime.fromJSDate(this.date_of_death).toISODate() : '';
+})
 
 module.exports = mongoose.model("Author", AuthorSchema);
