@@ -140,8 +140,35 @@ exports.bookinstance_delete_post = (req, res, next) => {
 }
 
 // display BookInstance update form on GET.
-exports.bookinstance_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: BookInstance update GET");
+exports.bookinstance_update_get = (req, res, next) => {
+  async.parallel(
+    {
+      instance(callback) {
+        BookInstance.findById(req.params.id)
+          .populate("book")
+          .exec(callback);
+      },
+      books(callback) {
+        Book.find(callback);
+      }
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.instance == null) {
+        const err = new Error("Book copy not found.")
+        err.status = 404;
+        return next(err);
+      }
+      res.render("bookinstance_form", { 
+        title: "Update Book Copy",
+        book_list: results.books, 
+        selected_book: results.instance.book._id, 
+        bookinstance: results.instance, 
+      });
+    }
+  )
 }
 
 // handle bookinstance update on POST.
