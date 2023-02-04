@@ -152,6 +152,11 @@ exports.genre_update_get = (req, res, next) => {
     if (err) {
       return next(err);
     }
+    if (results == null) {
+      const err = new Error("Genre not found");
+      err.status = 404;
+      return next(err);
+    }
     res.render("genre_form", {
       title: "Update Genre",
       genre: results,
@@ -173,16 +178,11 @@ exports.genre_update_post = [
       _id: req.params.id,
     });
     if (!errors.isEmpty()) {
-      Genre.findById(req.params.id).exec((err) => {
-        if (err) {
-          return next(err);
-        }
-        res.render("genre_form", {
-          title: "Update Genre",
-          genre,
-          errors: errors.array(),
-        })
-      })
+      res.render("genre_form", {
+        title: "Update Genre",
+        genre,
+        errors: errors.array(),
+      });
       return;
     }
     Genre.findByIdAndUpdate(req.params.id, genre, {},

@@ -214,16 +214,11 @@ exports.author_update_post = [
       _id: req.params.id,
     })
     if (!errors.isEmpty()) {
-      Author.findById(req.params.id, (err, results) => {
-        if (err) {
-          return next(err);
-        }
         res.render("book_form", {
           title: "Update Author",
           author,
           errors: errors.array(),
         });
-      })
       return;
     }
   Author.findByIdAndUpdate(req.params.id, author, {},
